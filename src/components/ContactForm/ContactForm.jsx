@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { actions } from '../contactsSlice'; 
 import styled from 'styled-components';
-
 
 const FormContainer = styled.form`
   display: flex;
@@ -49,17 +50,23 @@ const AddButton = styled.button`
 }
 `;
 
-const ContactForm = ({ onAdd }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
+  // Hook for dispatching actions.
+  const dispatch = useDispatch();
+  
+  // Handler for the form submission.
   const handleSubmit = (event) => {
     event.preventDefault();
-    onAdd({ id: nanoid(), name, number });
+    const newContact = { id: nanoid(), name, number };
+    dispatch(actions.addContact(newContact));
     setName('');
     setNumber('');
   };
 
+   // Handlers for the input changes.
+  // They update the corresponding state variables with the input values.
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
