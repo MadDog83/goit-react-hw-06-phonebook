@@ -1,21 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-   // createSlice generates a reducer and actions based on the provided configuration.
+// Create a slice of the Redux store
 const contactsSlice = createSlice({
-  // The name of the slice and the initial state.
   name: 'contacts',
   initialState: { contacts: [], filter: '' },
-  // The "case reducers". Each key generates an action creator and handles updates for that specific action.
   reducers: {
-    // Action and reducer for adding a contact.
+      //  Reducer for adding a new contact
     addContact: (state, action) => {
-      state.contacts.push(action.payload);
+      //  Check if a contact with the same name already exists
+      const doesExist = state.contacts.some(
+        contact => contact.name.toLowerCase() === action.payload.name.toLowerCase()
+      );
+
+      // If the contact does not already exist, add it to the state
+      if (!doesExist) {
+        state.contacts.push(action.payload);
+      }
     },
-    // Action and reducer for deleting a contact.
+    //  Reducer for deleting a contact
     deleteContact: (state, action) => {
       state.contacts = state.contacts.filter(contact => contact.id !== action.payload);
     },
-    // Action and reducer for setting the filter.
     setFilter: (state, action) => {
       state.filter = action.payload;
     },

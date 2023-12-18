@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actions } from '../contactsSlice'; 
 import styled from 'styled-components';
 
@@ -18,7 +18,7 @@ const StyledName = styled.span`
 color: white;
 font-weight: bold;
 `;
-//dert
+
 const StyledNumber = styled.span`
 color: white;
 font-weight: bold;
@@ -53,20 +53,11 @@ const AddButton = styled.button`
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // Hook for dispatching actions.
   const dispatch = useDispatch();
   
-  // Handler for the form submission.
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newContact = { id: nanoid(), name, number };
-    dispatch(actions.addContact(newContact));
-    setName('');
-    setNumber('');
-  };
+  // Get the current list of contacts from the Redux store
+  const contacts = useSelector(state => state.contacts.contacts);
 
-   // Handlers for the input changes.
-  // They update the corresponding state variables with the input values.
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
@@ -76,6 +67,24 @@ const ContactForm = () => {
     input = input.replace(/\D/g, "").slice(0, 8); 
     input = input.replace(/(\d{3})(\d{2})(\d{2})/, "$1-$2-$3"); 
     setNumber(input);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newContact = { id: nanoid(), name, number };
+
+    // Check if a contact with the same name already exists
+    const doesExist = contacts.some(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+    );
+
+    if (doesExist) {
+      alert(`${newContact.name} is already in contacts.`);
+    } else {
+      dispatch(actions.addContact(newContact));
+    }
+     setName('');
+     setNumber('');
   };
 
   return (
