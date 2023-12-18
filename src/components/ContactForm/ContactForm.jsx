@@ -18,7 +18,7 @@ const StyledName = styled.span`
 color: white;
 font-weight: bold;
 `;
-
+//dert
 const StyledNumber = styled.span`
 color: white;
 font-weight: bold;
